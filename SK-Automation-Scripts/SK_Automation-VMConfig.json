@@ -1,0 +1,76 @@
+{
+"Environment": "VM Guest Configuration",
+"GlobalAdmin": "Administrator",
+"VMs": [
+    {
+            "HyperVName": "SRV-DC1",
+            "OSHostName": "SRV-DC1",
+            "Role": "RootDC",
+            "Forest": "internal.sk-it.com",
+            "DomainName": "internal.sk-it.com",
+            "Site": "Kent-DataCenter",
+            "Subnet": "10.0.0.0/24",
+            "IP": "10.0.0.1",
+            "Prefix": 24,
+            "Gateway": "10.0.0.254",
+            "DNS": ["127.0.0.1","8.8.8.8"],
+            "NetBIOSName": "INTERNAL"
+        },
+        {
+            "HyperVName": "SRV-DC2",
+            "OSHostName": "SRV-DC2",
+            "Role": "ReplicaDC",
+            "Forest": "internal.sk-it.com",
+            "DomainName": "internal.sk-it.com",
+            "Site": "Kent-DataCenter",
+            "Subnet": "10.0.0.0/24",
+            "IP": "10.0.0.2",
+            "Prefix": 24,
+            "Gateway": "10.0.0.254",
+            "DNS": ["10.0.0.1","8.8.8.8"],
+            "NetBIOSName": "INTERNAL"
+        },
+        {
+            "HyperVName": "SRV-EX01",
+            "OSHostName": "SRV-EX01",
+            "Role": "MS",
+            "Forest": "internal.sk-it.com",
+            "DomainName": "internal.sk-it.com",
+            "Site": "Kent-DataCenter",
+            "Subnet": "10.0.0.0/24",
+            "IP": "10.0.0.3",
+            "Prefix": 24,
+            "Gateway": "10.0.0.254",
+            "DNS": ["10.0.0.1","8.8.8.8"],
+            "NetBIOSName": "INTERNAL"
+        },
+           {
+            "HyperVName": "SRV-MS01",
+            "OSHostName": "SRV-MS01",
+            "Role": "MS",
+            "Forest": "internal.sk-it.com",
+            "DomainName": "internal.sk-it.com",
+            "Site": "Kent-DataCenter",
+            "Subnet": "10.0.0.0/24",
+            "IP": "10.0.0.4",
+            "Prefix": 24,
+            "Gateway": "10.0.0.254",
+            "DNS": ["10.0.0.1","8.8.8.8"],
+            "NetBIOSName": "INTERNAL"
+        },
+        {
+            "HyperVName": "CLI-WIN11-01",
+            "OSHostName": "CLI-WIN11-01",
+            "Role": "Client",
+            "Forest": "internal.sk-it.com",
+            "DomainName": "internal.sk-it.com",
+            "Site": "Kent-DataCenter",
+            "Subnet": "10.0.0.0/24",
+            "IP": "10.0.0.5",
+            "Prefix": 24,
+            "Gateway": "10.0.0.254",
+            "DNS": ["10.0.0.1","8.8.8.8"]
+            
+        }
+]
+}
