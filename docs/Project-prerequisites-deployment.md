@@ -32,8 +32,6 @@ See the **[Technical Reference Manual](Technical-Reference.md)** for architectur
 9. [🟪 **STEP 9 — Execute Deployment Orchestrator**](#bg-step9-orchestrator)
 10. [⛔ **STEP 10 — Project Troubleshooting**](#bg-project-troubleshooting)
 
-### 🟩 Stage 2 
-
 
 <br>
 
