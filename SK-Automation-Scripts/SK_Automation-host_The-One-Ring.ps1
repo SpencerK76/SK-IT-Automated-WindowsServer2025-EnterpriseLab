@@ -37,8 +37,8 @@ param(
     # ------------------------------------------------------------------------------
     # PIPELINE CONTROL: SKIP PACKER BUILD
     # Set -SkipPackerBuild to $true to bypass Stage 1 (ISO generation and Packer image build).
-    # When enabled, the pipeline assumes valid, Sysprepped Gen 2 VHDX templates already 
-    # exist at the file paths defined in 01_SK_Automation-Host_CreateVM.ps1 ($GoldenImages).
+    # When enabled, the pipeline assumes valid, Sysprepped Gen 2 VHDX templates exist at the file paths defined in 01_SK_Automation-Host_CreateVM.ps1 ($GoldenImages).
+    # That is where you would place your own pre-built VHDX templates if you want to skip the Packer build stage.
     # ------------------------------------------------------------------------------
     [switch]$SkipPackerBuild = $false
 )

@@ -1,4 +1,6 @@
-﻿#Lab break-down script for SK-Automation-Project. This script will stop and remove all lab VMs and their associated storage folders. It is intended for use in a lab environment where you want to quickly reset the state of your Hyper-V host.
+﻿#Lab break-down script - this script will stop and remove all lab VMs and their associated storage folders. 
+#Be Careful! This is a destructive operation and cannot be undone ! :)
+
 
 # Resolve paths relative to where this script is executed
 $ScriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }

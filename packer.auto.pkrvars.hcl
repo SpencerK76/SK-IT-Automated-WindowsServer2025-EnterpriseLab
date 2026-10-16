@@ -16,7 +16,7 @@
 #   5. Used to authenticate post-promotion as DOMAIN\Administrator
 # ==============================================================================
 admin_username = "Administrator"
-admin_password = "ENTER YOUR ADMIN PASSWORD"
+admin_password = "ENTER YOUR PASSWORD HERE"
 
 # ==============================================================================
 # SECTION 2: INSTALLATION MEDIA INTEGRITY (SHA-256 CHECKSUMS)
@@ -33,4 +33,3 @@ iso_checksum       = "sha256:7B052573BA7894C9924E3E87BA732CCD354D18CB75A883EFA9B
 win11_iso_checksum = "sha256:6E861B93EB9501182AD2E4DC3FA8C411AFB6D7ED86A8CCBE37CA67D75470B95F"
 #Enter your checksum here for Windows 11
 
-git check-ignore -v "ISOs\WinServer2025Eval.iso"

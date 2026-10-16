@@ -42,8 +42,11 @@ This guide consolidates all prerequisite checks, system dependencies, hypervisor
 
 ## 🚀 Quick Start Guide  <a id="qs-step1-git-clone"></a>
 ### For users who are familiar with Packer, PowerShell Direct, and just want to get the lab up and running.
+### it is assumed you have Hyper-v / VS Code installed and you are familiar to cloning a repository.
 
 ### STEP 1. **Git Clone the Repository:**
+It is assumed you are cloneing the Repositiory to a folder which has enough hard drive space to host (ISOs/Packer VHDs/Hyper-v nodes) your entire Lab. [Map Hardware & Storage Capacity](#bg-step1-map-hardware)
+
    ```powershell
    git clone [https://github.com/SpencerK76/SK-IT-Automated-WindowsServer2025-EnterpriseLab](https://github.com/SpencerK76/SK-IT-Automated-WindowsServer2025-EnterpriseLab)
 
@@ -101,7 +104,7 @@ Extract packer.exe from the archive and place it into the root repository folder
 
 ---
 
-### STEP 4. Create the pfSense Isolated Network <a id="qs-step4-pfsense"></a>
+### STEP 4. Create the pfSense Isolated Network - then return to STEP 5 <a id="qs-step4-pfsense"></a>
 
 This architecture creates a direct 1:1 mapping between your Hyper-V virtual switches and pfSense logical interfaces.  Please follow this quick guide: **[How to setup an isolated Hyper-V lab with internet access](https://www.youtube.com/watch?v=eEZZQT8T4xY&t=690s)**.  My configuration mirrors the configurations in that guide. Please make sure your configurations match.  For a more indepth analysis of pfSesne and why it was used, go here - [pfSense Configuration](PfSense-configuration.md). 
 
@@ -132,21 +135,43 @@ Review and adjust configuration parameters in the **[Project Customisation](Cust
 ---
 
 ### STEP 6. Execute Deployment Orchestrator: <a id="qs-step6-orchestrator"></a>
+Before launching the full automation pipeline, make sure Hyper‑V and PowerShell are set up correctly.
 
-   * Open an elevated Visual Studio Code PowerShell 7 terminal as an Administrator.
-      * Ensure script execution is enabled on the host:
-      ```Powershell
-      Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
-      ```
-   * Disable Enhanced Session Mode in Hyper-V Settings while the automation process is running.
-Ensure script execution is enabled on the host:
+1. **Disable Enhanced Session Mode in Hyper‑V**  
+   Enhanced Session Mode can interfere with automated VM boots, so switch it off:
+   - Open **Hyper‑V Manager** as Administrator  
+   - Right‑click your Hyper‑V host → **Hyper‑V Settings**  
+   - Select **Enhanced Session Mode**  
+   - Untick **Allow enhanced session mode**
 
-Execute the master automation deployment script:
-   ```Powershell
-      .\Deploy_Automation_Project.ps1
+2. **Open an Elevated PowerShell 7 Terminal**  
+   Use Visual Studio Code or Windows Terminal — just make sure you’re running **as Administrator**.
+
+3. **Set the Execution Policy**  
+   Your automation scripts require PowerShell to allow local script execution. Set the system‑level policy to `RemoteSigned`:
+   ```powershell
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
    ```
 
-To start the automation, run ./Deploy_Automation_Project.ps1 from the Packer directory.  Please disable Enhanced Session Mode in Hyper-v settings before runninig master script.
+Run the Orchestrator Script:
+```powershell  
+ # Validate Your Packer Configuration to confirm that your Packer templates are valid:
+./packer validate .
+
+# To start the automation, run `./Deploy_Automation_Project.ps1` script, from the Packer root directory.  
+# Its job is to make sure the Orchestrator file (The One Ring!) are where they belong, find the 
+# script inside the 'SK-Automation-Scripts' folder, and launch it.    
+
+      .\Deploy_Automation_Project.ps1
+ 
+ ```
+This will now create, deploy and configure your Lab infrastructure, which was configured in the * **[`SK-Automation-Scripts/01_SK_Automation-Host_CreateVM.ps1`](../SK-Automation-Scripts/01_SK_Automation-Host_CreateVM.ps1)** script.  There should not be any errors but different host setups may produce slightly different timings or warnings, but nothing should break the workflow. 
+
+The deployment should run smoothly end‑to‑end. Different host setups may produce slightly different timings or warnings, but nothing should break the workflow.
+If anything unexpected pops up:
+   * AI can help troubleshoot quickly
+   * You can open a support ticket [here](https://sk-it-helpdesk.atlassian.net/servicedesk/customer/portal/1/create/26)
+   * Or leave feedback/suggestions to help improve the documentation, project [here](https://sk-it-helpdesk.atlassian.net/servicedesk/customer/portal/1/create/27) 
 
 ---
 <br>
@@ -353,20 +378,88 @@ win11_iso_checksum = "6E861B93EB9501182AD2E4DC3FA8C411AFB6D7ED86A8CCBE37CA67D754
 ---
 <br>
 
-### STEP 9. Execute Deployment Orchestrator: <a id="bg-step9-orchestrator"></a>
+## STEP 9 — Run the Deployment Orchestrator
+Before launching the full automation pipeline, make sure Hyper‑V and PowerShell are set up correctly.
 
-   * Open an elevated Visual Studio Code PowerShell 7 terminal as an Administrator.
-      * Ensure script execution is enabled on the host:
-      ```Powershell
-      Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
-      ```
-   * Disable Enhanced Session Mode in Hyper-V Settings while the automation process is running.
-Ensure script execution is enabled on the host:
+1. **Disable Enhanced Session Mode in Hyper‑V**  
+   Enhanced Session Mode can interfere with automated VM boots, so switch it off:
+   - Open **Hyper‑V Manager** as Administrator  
+   - Right‑click your Hyper‑V host → **Hyper‑V Settings**  
+   - Select **Enhanced Session Mode**  
+   - Untick **Allow enhanced session mode**
 
-Execute the master automation deployment script:
-   ```Powershell
-      .\Deploy_Automation_Project.ps1
+2. **Open an Elevated PowerShell 7 Terminal**  
+   Use Visual Studio Code or Windows Terminal — just make sure you’re running **as Administrator**.
+
+3. **Set the Execution Policy**  
+   Your automation scripts require PowerShell to allow local script execution. Set the system‑level policy to `RemoteSigned`:
+   ```powershell
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
    ```
 
-To start the automation, run ./Deploy_Automation_Project.ps1 from the Packer directory.  Please disable Enhanced Session Mode in Hyper-v settings before runninig master script.
+Run the Orchestrator Script:
+```powershell  
+ # Validate Your Packer Configuration to confirm that your Packer templates are valid:
+./packer validate .
 
+# To start the automation, run `./Deploy_Automation_Project.ps1` script, from the Packer root directory.  
+# Its job is to make sure the Orchestrator file (The One Ring!) are where they belong, find the 
+# script inside the 'SK-Automation-Scripts' folder, and launch it.    
+# You can stop the automation at any time by: Ctrl + C in the terminal window.  Packer deletes the output folders, only if it has not reached stage 2.
+# After you have built the nodes in Hyper-v, if you want to wipe the entire automated kab, use lab-wipe.ps1. 
+
+      .\Deploy_Automation_Project.ps1
+ 
+  ```
+This will now create, deploy and configure your Lab infrastructure, which was configured in the * **[`SK-Automation-Scripts/01_SK_Automation-Host_CreateVM.ps1`](../SK-Automation-Scripts/01_SK_Automation-Host_CreateVM.ps1)** script.  There should not be any errors but different host setups may produce slightly different timings or warnings, but nothing should break the workflow. 
+
+The deployment should run smoothly end‑to‑end. Different host setups may produce slightly different timings or warnings, but nothing should break the workflow.
+If anything unexpected pops up:
+   * AI can help troubleshoot quickly
+   * You can open a support ticket [here](https://sk-it-helpdesk.atlassian.net/servicedesk/customer/portal/1/create/26)
+   * Or leave feedback/suggestions to help improve the documentation, project [here](https://sk-it-helpdesk.atlassian.net/servicedesk/customer/portal/1/create/27) 
+
+
+
+##Troubleshooting
+
+### Possible automation errors.
+(this section will be updated when, if, more errors are reported)
+
+
+```Powershell
+#error 1: VS code - if packer output error.
+2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin: 2026/10/16 08:39:16 [DEBUG] Unable to get address during connection step: PowerShell error: Hyper-V\Get-VM : Hyper-V encountered an error trying to access an object on computer 'MAINADMIN' because the object was not found. The object might have been deleted, or you might not have permission to perform the task. Verify that
+2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin: the Virtual Machine Management service on the computer is running. If the service is running, try to perform the task again by using Run as Administrator.
+2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin: At C:\Users\Admin\AppData\Local\Temp\Powershell1142326244.ps1:4 char:9
+==> hyperv-iso.win2025: Waiting for WinRM to become available...
+2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin: +   $vm = Hyper-V\Get-VM | ?{$_.NetworkAdapters.MacAddress -eq $mac}
+2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin: +         ~~~~~~~~~~~~~~
+2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin:     + CategoryInfo          : ObjectNotFound: (:) [Get-VM], VirtualizationException
+2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin:     + FullyQualifiedErrorId : ObjectNotFound,Microsoft.HyperV.PowerShell.Commands.GetVM
+```
+
+```text
+This error occurs when Packer queries host inventory via Get-VM and encounters permission issues or broken virtual machine states: Missing Administrator Privileges: Both VS Code and Hyper-V Manager must be launched using Run as Administrator.Orphaned or Broken VMs: Any VM in a Saved-Critical or hung Stopping state will cause Get-VM to throw an exception across the entire host. 
+Make sure your tools are running as administrator and remove any broken or orphaned virtual machines from Hyper-V so the build script can read your system cleanly.
+```
+---
+Debugging tip: If you do run into an halt-error, you can run each script independantly without having to recreate the PackerVHDx's again.
+```powershell
+
+#Set this to $true in the SK_Automation-host_The-One-Ring.ps1.  This skips the entire Packer build process and runs automation scripts
+[CmdletBinding()]
+param(
+    [switch]$SkipPackerBuild = $true
+)
+
+#You can also run each script independantly outside the OneRing Orchestrator. 
+#1. Execute these credential variables first in your VSC PowerShell console one time.
+
+   $secPass = ConvertTo-SecureString "EnterYourPasswordYouSetInPacker" -AsPlainText -Force
+   $cred    = New-Object System.Management.Automation.PSCredential("Administrator", $secPass)
+
+#2. Then execute the script passing the credential object:
+ .\01_SK_Automation-Host_CreateVM.ps1 -Credential $cred
+
+```

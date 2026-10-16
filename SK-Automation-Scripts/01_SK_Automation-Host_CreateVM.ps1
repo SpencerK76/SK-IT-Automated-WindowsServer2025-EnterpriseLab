@@ -20,7 +20,6 @@
 }
 
 )"  
-
     This script also validates the project switches, clones disks, configures hardware profiles (vCPU, Dynamic Memory, 
     vTPM, Secure Boot), and initiates a staggered startup to prevent storage booting issues.
 .NOTES
@@ -33,9 +32,9 @@
 ==================================================================================
 STANDALONE STAGED EXECUTIONS  (Outside the OneRing Orchestrator - execute each script in secquence):
 
-1. Execute these credential variables first in your VSC PowerShell console:
+1. Execute these credential variables first in your VSC PowerShell console - make sure you enter the correct password you set in Packer for the Administrator account:
 
-   $secPass = ConvertTo-SecureString "EnterYourPasswordYouSetInPacker" -AsPlainText -Force
+   $secPass = ConvertTo-SecureString "Enter the password you put enter in the auto.packer.pkrvars.hcl" -AsPlainText -Force
    $cred    = New-Object System.Management.Automation.PSCredential("Administrator", $secPass)
 
 2. Then execute the script passing the credential object:
@@ -115,8 +114,8 @@ foreach ($sw in $RequiredSwitches) {
 # IMPORTANT:
 # - Ensure SK_Automation-VMConfig.json mirrors all changes made here (IP, Role, DNS).
 # - Disk size (default: 60 GB) is set in build.pkr.hcl (disk_size = 61440).
-# - Add, comment out (#), or remove nodes to match your hardware capacity.
-# - Assign the correct 'Role' (RootDC, ReplicaDC, MS, Client) so bootstrap scripts run properly.
+# - Add, comment out (#), or remove nodes to match your hardware capacity and lab infrastructure
+# - Assign the correct 'Role' (RootDC, ReplicaDC, MS, Client) so the scripts run properly.
 # ==============================================================================
 $VMList = @(
     # Infrastructure Tier: Active Directory Domain Controllers - used for replication / HA etc..
@@ -124,7 +123,7 @@ $VMList = @(
     @{Name = "SRV-DC2"; OS = "Win2025"; Switch = "lab-switch-lan"; MemStart = 4GB; MemMin = 2GB; MemMax = 6GB; VCPU = 4; Role = "ReplicaDC"; Forest = "internal.sk-it.com" },
 
     # Member Servers: MS Exchange, Azure Backup, Web-server Fail-over clustering etc.. 
-    @{Name = "SRV-EX01"; OS = "Win2025"; Switch = "lab-switch-lan"; MemStart = 4GB; MemMin = 2GB; MemMax = 6GB; VCPU = 4; Role = "MS"; Forest = "internal.sk-it.com" },
+   # @{Name = "SRV-EX01"; OS = "Win2025"; Switch = "lab-switch-lan"; MemStart = 4GB; MemMin = 2GB; MemMax = 6GB; VCPU = 4; Role = "MS"; Forest = "internal.sk-it.com" },
     @{Name = "SRV-MS01"; OS = "Win2025"; Switch = "lab-switch-lan"; MemStart = 4GB; MemMin = 2GB; MemMax = 6GB; VCPU = 4; Role = "MS"; Forest = "internal.sk-it.com" }
    
     # Client Workstations: Windows 11 Enterprise for WAC, Permissions testing, FSLogix profiles, Azure SSO etc..

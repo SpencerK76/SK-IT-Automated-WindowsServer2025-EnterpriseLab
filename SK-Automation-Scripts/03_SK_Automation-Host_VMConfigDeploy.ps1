@@ -19,7 +19,7 @@
 STANDALONE STAGED EXECUTIONS  (Outside the OneRing Orchestrator - execute each script in secquence!):
 
 1. Execute these credential variables first in your PowerShell console:
-   $secPass = ConvertTo-SecureString "YourAdminPasswordHere" -AsPlainText -Force
+   $secPass = ConvertTo-SecureString "Enter the password you put enter in the auto.packer.pkrvars.hcl" -AsPlainText -Force
    $cred    = New-Object System.Management.Automation.PSCredential("Administrator", $secPass)
 
 2. Then execute the script passing the credential object:
