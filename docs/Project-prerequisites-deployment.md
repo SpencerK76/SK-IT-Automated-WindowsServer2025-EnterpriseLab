@@ -2,11 +2,10 @@
 
 # 🚀 Project Prerequisites & Deployment Guide
 
-This guide consolidates all prerequisite checks, system dependencies, hypervisor settings, and execution steps into a single walkthrough. 
+This guide consolidates all prerequisite checks, system dependencies, hypervisor settings, and execution steps into a single walkthrough. Once the prerequisites are configured, you
+will have a fully automated Windows Server 2025 domain, enabelling you to join clients/servers to your forest with a few lines of code.
 
-* **Advanced Host/Firewall Network Routing:** See the **[pfSense Configuration Guide](PfSense-configuration.md)** for detailed virtual switch mappings and firewall isolation rules.
-* **Storage Allocation & Custom Topologies:** See the **[Infrastructure Customization Guide](Customise-your-Infrastructure.md)** to resize VM hardware, alter IP subnets, or redirect storage volumes.
-* **Detailed Technical information:** See the **[Technical Reference Manual](Technical-Reference.md)** for architecture deep dives, credential security, and Packer template logic.
+See the **[Technical Reference Manual](Technical-Reference.md)** for architecture explantions and additional configurations.
 
 ### Table of Contents
 

@@ -245,7 +245,7 @@ else {
 }
 
 
-### Key Technical Decisions Behind the Provisioning Code (AI Generated Notes)
+### Key Technical cecisions behind the provisioning Code (AI Generated Notes)
 <#
 * **Dynamic Memory allocation:** Prevents host RAM exhaustion by letting idle nodes drop to 1–2 GB while providing a 6 GB ceiling during heavy operations like domain promotion.
 * **Checkpoints disabled during build:** Avoids disk locking and messy `.avhdx` differencing trees while cloning and configuring nodes.
