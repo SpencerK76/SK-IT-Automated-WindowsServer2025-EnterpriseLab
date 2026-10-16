@@ -7,9 +7,9 @@ will have a fully automated Windows Server 2025 domain, enabelling you to join c
 
 See the **[Technical Reference Manual](Technical-Reference.md)** for architecture explantions and additional configurations.
 
-### Table of Contents
+---
 
-#### Quick Start Guide
+### Table of Contents
 
 ## Quick Start Guide
 1. [🟩 **STEP 1 — Git Clone the Repository**](#qs-step1-git-clone)
@@ -32,7 +32,7 @@ See the **[Technical Reference Manual](Technical-Reference.md)** for architectur
 9. [🟪 **STEP 9 — Execute Deployment Orchestrator**](#bg-step9-orchestrator)
 10. [⛔ **STEP 10 — Project Troubleshooting**](#bg-project-troubleshooting)
 
-
+### 🟩 Stage 2 
 
 
 <br>
