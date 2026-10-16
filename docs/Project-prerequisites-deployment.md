@@ -11,24 +11,27 @@ See the **[Technical Reference Manual](Technical-Reference.md)** for architectur
 
 #### Quick Start Guide
 
-1. [📥 STEP 1 — Git Clone the Repository](#qs-step1-git-clone)
-2. [💿 STEP 2 — Download the ISOs & Hashcorp Packer](#qs-step2-isos)
-3. [🔑 STEP 3 — Configure Administrator Credentials & Validate Checksums](#qs-step3-admin-creds)
-4. [🌐 STEP 4 — Create the pfSense Isolated Network](#qs-step4-pfsense)
-5. [⚙️ STEP 5 — Customise Your Lab VMs](#qs-step5-customise)
-6. [🚀 STEP 6 — Execute Deployment Orchestrator](#qs-step6-orchestrator)
+1. [🟩 STEP 1 — Git Clone the Repository](#qs-step1-git-clone)
+2. [🟩 STEP 2 — Download the ISOs & Hashcorp Packer](#qs-step2-isos)
+3. [🟩 STEP 3 — Configure Administrator Credentials & Validate Checksums](#qs-step3-admin-creds)
+4. [🟩 STEP 4 — Create the pfSense Isolated Network](#qs-step4-pfsense)
+5. [🟩 STEP 5 — Customise Your Lab VMs](#qs-step5-customise)
+6. [🟩 STEP 6 — Execute Deployment Orchestrator](#qs-step6-orchestrator)
 
 #### Beginner Start Guide
 
-1. [🧭 STEP 1 — Map Hardware & Storage Capacity](#bg-step1-map-hardware)
-2. [🛠️ STEP 2 — Install Development Tools & Console](#bg-step2-dev-tools)
-3. [🪟 STEP 3 — Install Hyper‑V](#bg-step3-hyperv)
-4. [🌐 STEP 4 — Setup the pfSense Isolated Network](#bg-step4-pfsense)
-5. [📥 STEP 5 — Git‑clone the repository & download HashCorp Packer](#bg-step5-git-clone)
-6. [⚙️ STEP 6 — Customise your project](#bg-step6-customise)
-7. [💿 STEP 7 — Install the Windows ISOs + Checksums](#bg-step7-isos)
-8. [🔑 STEP 8 — Set your Administrator credentials](#bg-step8-admin-creds)
-9. [🚀 STEP 9 — Execute Deployment Orchestrator](#bg-step9-orchestrator)
+1. [🟪 STEP 1 — Map Hardware & Storage Capacity](#bg-step1-map-hardware)
+2. [🟪 STEP 2 — Install Development Tools & Console](#bg-step2-dev-tools)
+3. [🟪 STEP 3 — Install Hyper‑V](#bg-step3-hyperv)
+4. [🟪 STEP 4 — Setup the pfSense Isolated Network](#bg-step4-pfsense)
+5. [🟪 STEP 5 — Git‑clone the repository & download HashCorp Packer](#bg-step5-git-clone)
+6. [🟪 STEP 6 — Customise your project](#bg-step6-customise)
+7. [🟪 STEP 7 — Install the Windows ISOs + Checksums](#bg-step7-isos)
+8. [🟪 STEP 8 — Set your Administrator credentials](#bg-step8-admin-creds)
+9. [🟪 STEP 9 — Execute Deployment Orchestrator](#bg-step9-orchestrator)
+10. [⛔ STEP 10 — Project Troubleshooting](#bg-project-troubleshooting) 
+
+
 
 <br>
 
@@ -39,11 +42,10 @@ See the **[Technical Reference Manual](Technical-Reference.md)** for architectur
 ---
 <br>
 
-## 🚀 Quick Start Guide  <a id="qs-step1-git-clone"></a>
-### For users who are familiar with Packer, PowerShell Direct, and just want to get the lab up and running.
-### it is assumed you have Hyper-v / VS Code installed and you are familiar to cloning a repository.
+## 🟩 Quick Start Guide  <a id="qs-step1-git-clone"></a>
+For users who are familiar with Packer, PowerShell Direct, and just want to get the lab up and running. It is assumed you have Hyper-v / VS Code installed and you are familiar to cloning a repository.
 
-### STEP 1. **Git Clone the Repository:**
+### 🟩 STEP 1. Git Clone the Repository:
 It is assumed you are cloneing the Repositiory to a folder which has enough hard drive space to host (ISOs/Packer VHDs/Hyper-v nodes) your entire Lab. [Map Hardware & Storage Capacity](#bg-step1-map-hardware)
 
    ```powershell
@@ -55,7 +57,7 @@ It is assumed you are cloneing the Repositiory to a folder which has enough hard
    
 ---
 
-### STEP 2. Download the ISO's and place them into the /ISO's folder: <a id="qs-step2-isos"></a>
+### 🟩 STEP 2. Download the ISO's and place them into the /ISO's folder: <a id="qs-step2-isos"></a>
   
 Place both evaluation ISO files directly into the root ISOs/ folder using these default names:
 
@@ -68,7 +70,7 @@ If you need to customize paths or filenames, update them in **[variables.pkr.hcl
 
 ---
 
-### STEP 2a. Download HashCorp Packer and add it to the Repository folder: <a id="qs-step2-isos"></a>
+### 🟩 STEP 2a. Download HashCorp Packer and add it to the Repository folder: <a id="qs-step2-isos"></a>
 
 Option 1: Automated Download to Repository Root - run this single command inside your VS Code terminal at the root of the project. It fetches the official 64-bit release from HashiCorp and extracts packer.exe directly into your repository folder:
 
@@ -95,7 +97,7 @@ Extract packer.exe from the archive and place it into the root repository folder
 
 ---
 
-### STEP 3. Configure Administrator Credentials & Validate ISO Checksums: <a id="qs-step3-admin-creds"></a>
+### 🟩 STEP 3. Configure Administrator Credentials & Validate ISO Checksums: <a id="qs-step3-admin-creds"></a>
 
    * Open **[packer.auto.pkrvars.hcl](../packer.auto.pkrvars.hcl)** to set your administrative password and verify/enter the ISO checksums.
 
@@ -103,7 +105,7 @@ Extract packer.exe from the archive and place it into the root repository folder
 
 ---
 
-### STEP 4. Create the pfSense Isolated Network - then return to STEP 5 <a id="qs-step4-pfsense"></a>
+### 🟩 STEP 4. Create the pfSense Isolated Network - then return to STEP 5 <a id="qs-step4-pfsense"></a>
 
 This architecture creates a direct 1:1 mapping between your Hyper-V virtual switches and pfSense logical interfaces.  Please follow this quick guide: **[How to setup an isolated Hyper-V lab with internet access](https://www.youtube.com/watch?v=eEZZQT8T4xY&t=690s)**.  My configuration mirrors the configurations in that guide. Please make sure your configurations match.  For a more indepth analysis of pfSesne and why it was used, go here - [pfSense Configuration](PfSense-configuration.md). 
 
@@ -117,7 +119,7 @@ Basic setup:
 
 ---
 
-### STEP 5. Customize Your Lab VMs - then return to STEP 6. <a id="qs-step5-customise"></a>
+### 🟩 STEP 5. Customize Your Lab VMs - then return to STEP 6. <a id="qs-step5-customise"></a>
 Review and adjust configuration parameters in the **[Project Customisation](Customise-your-Infrastructure.md)** if you need to alter settings (server names, domain and forest names) from the defaults defined in the project files:
 
 * **[`build.pkr.hcl`](../build.pkr.hcl)** — Default Sysprep disk sizing, guest software provisioners, and unattended XML staging.
@@ -133,7 +135,7 @@ Review and adjust configuration parameters in the **[Project Customisation](Cust
 
 ---
 
-### STEP 6. Execute Deployment Orchestrator: <a id="qs-step6-orchestrator"></a>
+### 🟩 STEP 6. Execute Deployment Orchestrator: <a id="qs-step6-orchestrator"></a>
 Before launching the full automation pipeline, make sure Hyper‑V and PowerShell are set up correctly.
 
 1. **Disable Enhanced Session Mode in Hyper‑V**  
@@ -175,13 +177,13 @@ If anything unexpected pops up:
 ---
 <br>
 
-## 📘 Beginner Start Guide (users starting from scratch) <a id="beginner-start"></a>
+## 🟪 Beginner Start Guide (users starting from scratch) <a id="beginner-start"></a>
 
 Here is a more indepth guide for users that are starting from the very begining.  Please use AI to supplement your learning and configurations.
 
 ---
 
-### **STEP 1. Map Hardware & Storage Capacity**  <a id="bg-step1-map-hardware"></a>
+### 🟪 STEP 1. Map Hardware & Storage Capacity  <a id="bg-step1-map-hardware"></a>
 Map out your host resources before deploying. If you plan to customize this automation project beyond the default settings, calculate your physical hardware requirements first:
 
 * **Node Count & Roles:** How many Domain Controllers, member servers, and client workstations do you plan to provision?
@@ -204,7 +206,7 @@ See [Technical Reference](docs/Technical-Reference.md) for more information.
 ---
 <br>
 
-### STEP 2. Install Development Tools & Console  <a id="bg-step2-dev-tools"></a>
+### 🟪 STEP 2. Install Development Tools & Console  <a id="bg-step2-dev-tools"></a>
 * Download and install the latest [Visual Studio Code](https://code.visualstudio.com/Download).
 * Download and install the latest [PowerShell 7 (PS7)](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows) *(Restart VS Code after installing PS7)*.
 
@@ -239,7 +241,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 ---
 <br>
 
-### STEP 3. Install Hyper-V on your Windows Client <a id="bg-step3-hyperv"></a>
+### 🟪 STEP 3. Install Hyper-V on your Windows Client <a id="bg-step3-hyperv"></a>
 In Visual Studio Code, run the following, or install via Windows 11 GUI.
 
 To install Hyper-v you must:
@@ -284,13 +286,13 @@ Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart
 ---
 <br>
 
-### STEP 4. Setup the pfSense Isolated Network in Hyper-V <a id="bg-step4-pfsense"></a>
+### 🟪 STEP 4. Setup the pfSense Isolated Network in Hyper-V <a id="bg-step4-pfsense"></a>
 Deploy your isolated Hyper-V network by following the **[pfSense Configuration Guide](PfSense-configuration.md)**. This guide explains why pfSense was chosen for perimeter isolation, provides a step-by-step walkthrough for virtual switch and network adapter configurations, and includes a link to a video tutorial that mirrors the exact network settings used throughout this automation project. A brief summary of the network architecture can also be viewed below in [🛡️ pfSense Network Isolation Guide](#pfsense-network-isolation-guide).
 
 ---
 <br>
 
-###  STEP 5.  Git-clone the repository <a id="bg-step5-git-clone"></a>
+### 🟪 STEP 5.  Git-clone the repository <a id="bg-step5-git-clone"></a>
 After you have installed Visual Studio Code, and have finished all the previous prerequisites (and have run tests to make sure you have isolated and outbound connectivity), it's time for you to git-clone the SK-IT Windows Server 2025 Automation Project and install the repository files.
 
 To prevent path fragmentation and avoid Hyper-V permission issues (`NT VIRTUAL MACHINE\Virtual Machines` ACL errors etc..), **do not split repository paths across multiple drives**. Clone the entire project repository directly onto the root or a dedicated folder, drive or partition that has enough capacity for your entire lab. A high-capacity SSD/NVMe drive is recommended. Please read section 2, 3 of the Technical Reference, and sections 1, 2 of the Project Customisations for more information.
@@ -314,7 +316,7 @@ After completing this, you should be able to view all the files in this automati
 ---
 <br>
 
-### STEP 5b. Download HashCorp Packer and add it to the Repository folder: <a id="qs-step2-isos"></a>
+### 🟪 STEP 5b. Download HashCorp Packer and add it to the Repository folder: <a id="qs-step2-isos"></a>
 
 Option 1: Automated Download to Repository Root - run this single command inside your VS Code terminal at the root of the project. It fetches the official 64-bit release from HashiCorp and extracts packer.exe directly into your repository folder:
 
@@ -341,13 +343,13 @@ Extract packer.exe from the archive and place it into the root repository folder
 ---
 <br>
 
-###  STEP 6.  Customise your project then return to STEP 7<a id="bg-step6-customise"></a>
-Please view the customisation guide here: [Project Customisation](Customise-your-Infrastructure.md) 
+### 🟪 STEP 6.  Customise your project then return to STEP 7<a id="bg-step6-customise"></a>
+Please view the customisation guide here, [Project Customisation](Customise-your-Infrastructure.md) and return after it has been completed.
 
 ---
 <br>
 
-###  STEP 7 Install the Windows ISOs + Checksums <a id="bg-step7-isos"></a>
+### 🟪 STEP 7 Install the Windows ISOs + Checksums <a id="bg-step7-isos"></a>
 Required Evaluation Media. Download these ISOs.
 * [Windows Server 2025 Datacenter (Desktop Experience) Evaluation](https://www.microsoft.com/en-gb/evalcenter/download-windows-server-2025)
 * [Windows 11 Enterprise Evaluation (English - Great Britain)](https://www.microsoft.com/en-gb/evalcenter/download-windows-11-enterprise)
@@ -361,7 +363,7 @@ Once downloaded, place both ISO images into the `/ISOs` repository directory usi
 ---
 <br>
 
-###  STEP 8. Set your Administrator credentials <a id="bg-step8-admin-creds"></a>
+### 🟪 STEP 8. Set your Administrator credentials <a id="bg-step8-admin-creds"></a>
 ### Where to Declare Your Credentials
 Open `packer.auto.pkrvars.hcl` in the repository root and declare your desired local administrator username and password:
 
@@ -377,7 +379,7 @@ win11_iso_checksum = "6E861B93EB9501182AD2E4DC3FA8C411AFB6D7ED86A8CCBE37CA67D754
 ---
 <br>
 
-## STEP 9 — Run the Deployment Orchestrator
+### 🟪 STEP 9 — Run the Deployment Orchestrator  <a id="bg-step9-orchestrator"></a>                
 Before launching the full automation pipeline, make sure Hyper‑V and PowerShell are set up correctly.
 
 1. **Disable Enhanced Session Mode in Hyper‑V**  
@@ -418,20 +420,18 @@ If anything unexpected pops up:
    * You can open a support ticket [here](https://sk-it-helpdesk.atlassian.net/servicedesk/customer/portal/1/create/26)
    * Or leave feedback/suggestions to help improve the documentation, project [here](https://sk-it-helpdesk.atlassian.net/servicedesk/customer/portal/1/create/27) 
 
+<br>
+
+---
+
+## ⛔ Project Troubleshooting - this section will be updated when, if, more errors are reported <a id="bg-project-troubleshooting"></a>      
 
 
-##Troubleshooting
-
-### Possible automation errors.
-(this section will be updated when, if, more errors are reported)
-
-
+### ⛔ Error 1: VS code output - if Packer outputs this error:
 ```Powershell
-#error 1: VS code - if packer output error.
+
 2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin: 2026/10/16 08:39:16 [DEBUG] Unable to get address during connection step: PowerShell error: Hyper-V\Get-VM : Hyper-V encountered an error trying to access an object on computer 'MAINADMIN' because the object was not found. The object might have been deleted, or you might not have permission to perform the task. Verify that
 2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin: the Virtual Machine Management service on the computer is running. If the service is running, try to perform the task again by using Run as Administrator.
-2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin: At C:\Users\Admin\AppData\Local\Temp\Powershell1142326244.ps1:4 char:9
-==> hyperv-iso.win2025: Waiting for WinRM to become available...
 2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin: +   $vm = Hyper-V\Get-VM | ?{$_.NetworkAdapters.MacAddress -eq $mac}
 2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin: +         ~~~~~~~~~~~~~~
 2026/10/16 08:39:16 packer-plugin-hyperv_v1.1.5_x5.0_windows_amd64.exe plugin:     + CategoryInfo          : ObjectNotFound: (:) [Get-VM], VirtualizationException
@@ -439,8 +439,10 @@ If anything unexpected pops up:
 ```
 
 ```text
-This error occurs when Packer queries host inventory via Get-VM and encounters permission issues or broken virtual machine states: Missing Administrator Privileges: Both VS Code and Hyper-V Manager must be launched using Run as Administrator.Orphaned or Broken VMs: Any VM in a Saved-Critical or hung Stopping state will cause Get-VM to throw an exception across the entire host. 
-Make sure your tools are running as administrator and remove any broken or orphaned virtual machines from Hyper-V so the build script can read your system cleanly.
+This usually occures when Packer queries the Hyper-V host VM inventory, via Get-VM, and encounters permission issues or broken virtual machine state.
+
+   * Missing Administrator Privileges: Both VS Code and Hyper-V Manager must be launched using Run as Administrator.
+   * Orphaned or Broken VMs: Any VM in a Saved-Critical or hung Stopping state will cause Get-VM to throw an exception across the entire host. 
 ```
 ---
 Debugging tip: If you do run into an halt-error, you can run each script independantly without having to recreate the PackerVHDx's again.
@@ -460,5 +462,7 @@ param(
 
 #2. Then execute the script passing the credential object:
  .\01_SK_Automation-Host_CreateVM.ps1 -Credential $cred
-
 ```
+
+<br>
+---
