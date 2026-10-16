@@ -11,25 +11,27 @@ See the **[Technical Reference Manual](Technical-Reference.md)** for architectur
 
 #### Quick Start Guide
 
-1. [🟩 STEP 1 — Git Clone the Repository](#qs-step1-git-clone)
-2. [🟩 STEP 2 — Download the ISOs & Hashcorp Packer](#qs-step2-isos)
-3. [🟩 STEP 3 — Configure Administrator Credentials & Validate Checksums](#qs-step3-admin-creds)
-4. [🟩 STEP 4 — Create the pfSense Isolated Network](#qs-step4-pfsense)
-5. [🟩 STEP 5 — Customise Your Lab VMs](#qs-step5-customise)
-6. [🟩 STEP 6 — Execute Deployment Orchestrator](#qs-step6-orchestrator)
+## Quick Start Guide
+1. [🟩 **STEP 1 — Git Clone the Repository**](#qs-step1-git-clone)
+2. [🟩 **STEP 2 — Download the ISOs & HashCorp Packer**](#qs-step2-isos)
+3. [🟩 **STEP 3 — Configure Administrator Credentials & Validate Checksums**](#qs-step3-admin-creds)
+4. [🟩 **STEP 4 — Create the pfSense Isolated Network**](#qs-step4-pfsense)
+5. [🟩 **STEP 5 — Customise Your Lab VMs**](#qs-step5-customise)
+6. [🟩 **STEP 6 — Execute Deployment Orchestrator**](#qs-step6-orchestrator)
 
-#### Beginner Start Guide
+## Beginner Start Guide
 
-1. [🟪 STEP 1 — Map Hardware & Storage Capacity](#bg-step1-map-hardware)
-2. [🟪 STEP 2 — Install Development Tools & Console](#bg-step2-dev-tools)
-3. [🟪 STEP 3 — Install Hyper‑V](#bg-step3-hyperv)
-4. [🟪 STEP 4 — Setup the pfSense Isolated Network](#bg-step4-pfsense)
-5. [🟪 STEP 5 — Git‑clone the repository & download HashCorp Packer](#bg-step5-git-clone)
-6. [🟪 STEP 6 — Customise your project](#bg-step6-customise)
-7. [🟪 STEP 7 — Install the Windows ISOs + Checksums](#bg-step7-isos)
-8. [🟪 STEP 8 — Set your Administrator credentials](#bg-step8-admin-creds)
-9. [🟪 STEP 9 — Execute Deployment Orchestrator](#bg-step9-orchestrator)
-10. [⛔ STEP 10 — Project Troubleshooting](#bg-project-troubleshooting) 
+1. [🟪 **STEP 1 — Map Hardware & Storage Capacity**](#bg-step1-map-hardware)
+2. [🟪 **STEP 2 — Install Development Tools & Console**](#bg-step2-dev-tools)
+3. [🟪 **STEP 3 — Install Hyper‑V**](#bg-step3-hyperv)
+4. [🟪 **STEP 4 — Setup the pfSense Isolated Network**](#bg-step4-pfsense)
+5. [🟪 **STEP 5 — Git‑clone the Repository & Download HashCorp Packer**](#bg-step5-git-clone)
+6. [🟪 **STEP 6 — Customise Your Project**](#bg-step6-customise)
+7. [🟪 **STEP 7 — Install the Windows ISOs + Checksums**](#bg-step7-isos)
+8. [🟪 **STEP 8 — Set Your Administrator Credentials**](#bg-step8-admin-creds)
+9. [🟪 **STEP 9 — Execute Deployment Orchestrator**](#bg-step9-orchestrator)
+10. [⛔ **STEP 10 — Project Troubleshooting**](#bg-project-troubleshooting)
+
 
 
 
