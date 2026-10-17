@@ -7,25 +7,18 @@
 # SK-IT Windows Server 2025 Automation Project 
 
 ## Description, Goal and the Future
-* **Project Description:** This project automates the creation of a fully isolated Windows Server 2025 domain environment, including clients, member servers, and preconfigured server roles (AD DS, DNS, and DHCP), along with users and organisational units (OUs). The build pipeline uses Visual Studio Code, Hyper-V, pfSense (for network isolation), and PowerShell Direct. It provides a repeatable sandbox for lab testing, certification preparation, and practical hands-on administration.
+* **Project Description:** This project provisions,automates and creats a fully isolated Windows Server 2025 domain environment, including clients, member servers, Domain Controlelrs (with preconfigured server roles RootDC, AD DS, DNS, and DHCP), along with users and organisational units (OUs). The build pipeline uses Visual Studio Code, Hyper-V, pfSense (for network isolation), and PowerShell Direct. It provides a repeatable sandbox for lab testing, certification preparation, and practical hands-on administration.
 
-* **The Goal:** Build a script-based, repeatable, isolated, end-to-end workflow that deploys or tears down the entire environment with minimal manual intervention. The configuration allows users to easily customise node counts (VMs), assigned roles (Root DC, Replica DC, Member Server, Client), and virtual hardware specifications (vCPU, dynamic/static memory, disk provisioning, etc.).
+* **The Goal:** Build a script-based, repeatable, isolated, end-to-end pipeline that deploys a Windows Server environment with minimal manual intervention, e.g. execute one line of code. The various configurations should allow users to easily create multiple forests and domains. To customise VM nodes (add, remove and join), assigned roles (Root DC, Replica DC, Member Server and Client), and virtual specify VM hardware specifications (vCPU, memory and disk provisioning, etc.).
 
-* **Future Roadmap:** Planned updates include an interactive setup mode where users can step through lab settings right in the VS Code terminal (via `Read-Host` prompts) or through a lightweight web form, alongside the existing automated defaults should they choose them.
+* **Future Roadmap:** Planned updates include an interactive setup mode where users can step through lab settings right in the VS Code terminal (via `Read-Host` prompts) or through a lightweight web form.  Linux based OS automation will also be added to the pipeline.
 
 ## How This Project Was Accomplished
-This project uses HashiCorp Packer to build two sysprepped golden VHDX images: Windows Server 2025 Datacenter and Windows 11. Both images are fully sysprepped and include bootstrap scripts that establish the initial communication channel, handing off control to PowerShell Direct. 
+This project uses HashiCorp Packer to build two golden VHDX images: Windows Server 2025 Datacenter and Windows 11 Enterprise. Both images are fully sysprepped (via pre-existing - UK based - unattended.xml files) and include bootstrap scripts that establish the initial communication channels, passing the control to PowerShell Direct, after the Packer VHDX complesion. 
 
-PowerShell Direct then executes a sequence of six automation scripts that read from a JSON configuration file to provision and customize the Hyper-V VMs. These scripts build the AD DS forest and domain, promote the domain controllers, join member servers and clients, and structure the organisational units (OUs) alongside initial user accounts.
+PowerShell Direct then executes a sequence of six automation scripts that read from a JSON configuration file to provision and customize the Hyper-V VMs. These scripts build the AD DS forest and domain, promote the domain controllers, join member servers and clients, and structure the organisational units (OUs) alongside test user accounts.
 
 All stages are coordinated by the One Ring Orchestrator script, which acts as a centralised pipeline controller and single source of authentication, execution and error handling.
-
-It is recommended you read through the **[Technical Reference Guide](/docs/Technical-Reference.md)** before you read the Project Prerequisites & Deployment Guide. 
-
----
-
-**Quick Links:** [Technical Reference](docs/Technical-Reference.md) | [Project Customisation](docs/Customise-your-Infrastructure.md) | [pfSense Configuration](docs/pfSense-configuration.md) | [Project Prerequisites & Deployment Guide](docs/Project-prerequisites-deployment.md) |
-
 
 ---
 
@@ -41,9 +34,9 @@ Acts as the centralised pipeline controller and single entry point of execution.
 - Uses [Packer](build.pkr.hcl) to build fully sysprepped Windows Server 2025 and Windows 11 golden VHDX images from raw ISO media.
 - Employs [modular HCL](variables.pkr.hcl) and XML [answer file](templates/Autounattend.pkrtpl.hcl) templates (`Autounattend.pkrtpl.hcl`) to automate disk partitioning, OS edition selection, and regional/local (UK) settings.
 - Executes [bootstrap](scripts/bootstrap-winrm-https.ps1) scripts to provision temporary credentials and configure WinRM over HTTPS so Packer can communicate with and sysprep the base OS images.
-- Dynamically injects a single set of [administrative credentials](packer.auto.pkrvars.hcl) via `packer.auto.pkrvars.hcl`, eliminating hardcoded passwords across the entire build pipeline.
+- Dynamically injects a single set of [administrative credentials](packer.auto.pkrvars.hcl) via `packer.auto.pkrvars.hcl`, eliminating hardcoded passwords across the entire build pipeline.  This one-time injection, of administrative credentials, serves as the main administrative account password for the local and domain account.
 
-**Execution Handover:** With the golden VHDXs sealed, [the-one-ring.ps1](SK-Automation-Scripts/SK_Automation-host_The-One-Ring.ps1) hands off control to the host automation suite to provision the VMs and configure the guest OS instances via PowerShell Direct.
+**Execution Handover:** With the golden VHDXs sealed and exported into the dynamically created folders, [the-one-ring.ps1](SK-Automation-Scripts/SK_Automation-host_The-One-Ring.ps1) redirects control to the host automation stage to provision the VMs and configure the guest OS instances via PowerShell Direct.
 
 ---
 
@@ -103,7 +96,7 @@ How about some background ambience while working through this automation project
       <td><nobr><a href="SK-Automation-Scripts/SK_Automation-host_The-One-Ring.ps1"><code>SK_Automation-host_The-One-Ring.ps1</code></a></nobr></td>
       <td align="center">Orchestrator</td>
       <td>Pipeline controller. Captures administrative credentials, sets environment variables, and executes Stages 1 through 6 sequentially with strict fail-fast error handling.</td>
-      <td><em>Console output</em></td>
+      <td> <a href="images/Packer-execution/Stage1_validate-start.png">The One Ring</a></td>
     </tr>
     <tr>
       <td align="center"><strong>02</strong></td>
@@ -111,8 +104,8 @@ How about some background ambience while working through this automation project
       <td align="center">Stage 1</td>
       <td>Invokes Packer to perform unattended OS installations, producing clean, sysprepped base VHDXs for Windows Server 2025 and Windows 11.</td>
       <td>
-        <a href="images/Packer-execution/Stage1_validate-start.png">Validate Start</a> · 
-        <a href="images/Packer-execution/Stage1a_validate-finish.png">Validate Finish</a> · 
+        <a href="images/Packer-execution/Stage1_validate-start.png">Validate Packer Start</a> · 
+        <a href="images/Packer-execution/Stage1a_validate-finish.png">Validated</a> · 
         <a href="images/Packer-execution/Stage1b_Sysprep.png">Sysprep</a> · 
         <a href="images/Packer-execution/Stage1c_OS-installation.png">OS Install</a> · 
         <a href="images/Packer-execution/Stage1d_expectedOutput-WinRMSer2025-Connected.png">WinRM (Server 2025)</a> · 
@@ -199,5 +192,6 @@ How about some background ambience while working through this automation project
 
 **Author's Note:** AI assistants were utilised during the development of this project to accelerate troubleshooting, refine PowerShell automation and produce documentation.
 <br>
-You can now go directly to the Prerequisites & Deployment Guide](docs/Project-prerequisites-deployment.md), or you can read through the **[Technical Reference Guide](docs/Technical-Reference.md).
+
+## Please read through the [Technical Reference Guide](docs/Technical-Reference.md) next.
 

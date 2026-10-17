@@ -72,7 +72,7 @@ If you need to customize paths or filenames, update them in **[variables.pkr.hcl
 
 ### 🟩 STEP 2a. Download HashCorp Packer and add it to the Repository folder: <a id="qs-step2-isos"></a>
 
-Option 1: Automated Download to Repository Root - run this single command inside your VS Code terminal at the root of the project. It fetches the official 64-bit release from HashiCorp and extracts packer.exe directly into your repository folder:
+Option 1: Automated the download to repository Root - run these single commands inside your elevated VS Code terminal, at the root of the project. It fetches the official 64-bit release from HashiCorp and extracts packer.exe directly into your repository folder:
 
 ```PowerShell
 $ver = (Invoke-RestMethod "https://checkpoint-api.hashicorp.com/v1/check/packer").current_version
@@ -83,17 +83,24 @@ Write-Host "Packer v$ver ready in project root." -ForegroundColor Green
 ```
 Option 2: Install via Windows Package Manager (winget) If your host system has winget installed:
 ```Powershell
+Write-Host "Checking for Packer..." -ForegroundColor Cyan
+
 if (-not (Get-Command packer -ErrorAction SilentlyContinue)) {
-    Write-Host "Packer not detected. Installing via winget..." -ForegroundColor Yellow
+    Write-Host "Installing Packer via winget..." -ForegroundColor Yellow
     winget install HashiCorp.Packer --silent --accept-source-agreements --accept-package-agreements
 }
-```
-Option 3: Manual Direct Download. Download the 64-bit Windows binary zip directly from the HashiCorp Packer Portal.
-```Powershell
-Invoke-WebRequest "https://developer.hashicorp.com/packer/install" -OutFile "$env:TEMP\packer.zip" -UseBasicParsing
-```
 
-Extract packer.exe from the archive and place it into the root repository folder.
+Write-Host "Packer version: $(packer -v)" -ForegroundColor Green
+```
+---
+
+Option 3: Manual Installation (Shortest Version)
+
+  * 1. Download the ZIP
+  * 2. Unzip
+  * 3. Drop packer.exe into the project root (Automated-WindowsServer2025-EnterpriseLab)
+
+[Download HashCorp Packer 1.16.1 direct](https://releases.hashicorp.com/packer/1.16.1/packer_1.16.1_windows_amd64.zip)
 
 ---
 
@@ -318,7 +325,7 @@ After completing this, you should be able to view all the files in this automati
 
 ### 🟪 STEP 5b. Download HashCorp Packer and add it to the Repository folder: <a id="qs-step2-isos"></a>
 
-Option 1: Automated Download to Repository Root - run this single command inside your VS Code terminal at the root of the project. It fetches the official 64-bit release from HashiCorp and extracts packer.exe directly into your repository folder:
+Option 1: Automated the download to repository Root - run these single commands inside your elevated VS Code terminal, at the root of the project. It fetches the official 64-bit release from HashiCorp and extracts packer.exe directly into your repository folder:
 
 ```PowerShell
 $ver = (Invoke-RestMethod "https://checkpoint-api.hashicorp.com/v1/check/packer").current_version
@@ -329,17 +336,26 @@ Write-Host "Packer v$ver ready in project root." -ForegroundColor Green
 ```
 Option 2: Install via Windows Package Manager (winget) If your host system has winget installed:
 ```Powershell
+Write-Host "Checking for Packer..." -ForegroundColor Cyan
+
 if (-not (Get-Command packer -ErrorAction SilentlyContinue)) {
-    Write-Host "Packer not detected. Installing via winget..." -ForegroundColor Yellow
+    Write-Host "Installing Packer via winget..." -ForegroundColor Yellow
     winget install HashiCorp.Packer --silent --accept-source-agreements --accept-package-agreements
 }
-```
-Option 3: Manual Direct Download. Download the 64-bit Windows binary zip directly from the HashiCorp Packer Portal.
-```Powershell
-Invoke-WebRequest "https://developer.hashicorp.com/packer/install" -OutFile "$env:TEMP\packer.zip" -UseBasicParsing
-```
-Extract packer.exe from the archive and place it into the root repository folder.
 
+Write-Host "Packer version: $(packer -v)" -ForegroundColor Green
+```
+
+---
+
+Option 3: Manual Installation (Shortest Version)
+
+  * 1. Download the ZIP
+  * 2. Unzip
+  * 3. Drop packer.exe into the project root (Automated-WindowsServer2025-EnterpriseLab)
+
+[Download HashCorp Packer 1.16.1 direct](https://releases.hashicorp.com/packer/1.16.1/packer_1.16.1_windows_amd64.zip)
+ 
 ---
 <br>
 

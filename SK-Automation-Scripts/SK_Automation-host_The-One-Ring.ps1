@@ -35,12 +35,22 @@
 [CmdletBinding()]
 param(
     # ------------------------------------------------------------------------------
-    # PIPELINE CONTROL: SKIP PACKER BUILD
-    # Set -SkipPackerBuild to $true to bypass Stage 1 (ISO generation and Packer image build).
+    # PIPELINE CONTROL: SKIP THE PACKER BUILD PROCESS:  After you have created the golden images once, you can skip the Packer build process when adding nodes to your lab.
+    # Set - $SkipPackerBuild to $true to bypass Stage 1 (The packer build).
     # When enabled, the pipeline assumes valid, Sysprepped Gen 2 VHDX templates exist at the file paths defined in 01_SK_Automation-Host_CreateVM.ps1 ($GoldenImages).
-    # That is where you would place your own pre-built VHDX templates if you want to skip the Packer build stage.
+    # If you do intend to use your own pre-built VHDX templates, your VHDX images must meet 5 core requirements. 
+    #
+    # 1. Integration Services: The image must have 'vmicvmsession' set to Automatic and RemoteSigned execution policy enabled for host VMBus commands.
+    # 2. Local Admin: The local Administrator account must remain active, unlocked, and assigned a known, static password that bypasses OOBE prompts.
+    # 3. Provisioning & Firewall: Inbound management traffic (WinRM and PowerShell Direct) must be permitted through Windows Firewall across all network profiles.
+    # 4. Networking: Network adapters must be set to DHCP before sysprep so new synthetic interfaces initialize cleanly without stale IP conflicts.
+    # 5. UEFI/GPT Layout: The disk must use a GPT partition layout with valid EFI system and MSR partitions to support Generation 2 SCSI booting.
+    # NOTE: It is significantly easier to simply configure your existing unattended .xml files and add these steps to the Packer 
+    # build provisioning block than to manually configure all five requirements above on a custom VHDX.
+    #
+    #
     # ------------------------------------------------------------------------------
-    [switch]$SkipPackerBuild = $false
+    [switch]$SkipPackerBuild = $false  # Set to $true to skip Stage 1 (Packer build) and use existing golden images.
 )
 
 # Stop execution immediately if any command encounters an unhandled terminating error.
@@ -51,7 +61,7 @@ $env:PACKER_LOG = 1
 
 
 # ==============================================================================
-# STEP 1: PATH RESOLUTION & SCRIPT DISCOVERY
+# STEP 1a: PATH RESOLUTION & SCRIPT DISCOVERY!
 # ==============================================================================
 # Discover the current folder (SK-Automation-Scripts) and step up one level to the repository root.
 $ScriptDir   = $PSScriptRoot
@@ -88,7 +98,7 @@ Write-Host "Packer templates validated successfully.`n" -ForegroundColor Green
 
 
 # ==============================================================================
-# STEP 2: CREDENTIAL EXTRACTION (set in packer.auto.pkrvars.hcl)
+# STEP 1b: CREDENTIAL EXTRACTION (set in packer.auto.pkrvars.hcl)!
 # ==============================================================================
 # We extract credentials directly from packer.auto.pkrvars.hcl so you only ever have to set passwords in one place.
 if (-not (Test-Path -Path $HclVarsPath)) {
@@ -108,7 +118,7 @@ Write-Host "Master Pipeline credential initialized for administrative user: [$ad
 
 
 # ==============================================================================
-# STEP 3: PRE-RUN VERIFICATION
+# STEP 1c: PRE-RUN VERIFICATION!
 # ==============================================================================
 # Verify all required script files exist before we begin, preventing half-built environments.
 $RequiredFiles = @(
@@ -131,7 +141,7 @@ Write-Host "Pre-run file verification passed. All pipeline components located." 
 
 
 # ==============================================================================
-# STAGE 1: PACKER DUAL-IMAGE BUILD PIPELINE
+# STAGE 1: PACKER DUAL-IMAGE BUILD - It begins.
 # ==============================================================================
 if (-not $SkipPackerBuild) {
     Write-Host "`n==========================================================" -ForegroundColor Cyan
@@ -176,7 +186,7 @@ Write-Host "`n[STAGE 2.1 SUCCESS] All Hyper-V VMs created are now running and lo
 
 
 # ==============================================================================
-# STAGE 2.2: VM VMBUS & POWERSHELL DIRECT CONNECTIVITY TEST
+# STAGE 2.2: VM VMBUS & POWERSHELL DIRECT CONNECTIVITY TEST!
 # ==============================================================================
 Write-Host "`n========================================================" -ForegroundColor Cyan
 Write-Host " [STAGE 2.2] VM VMBUS TEST: Verifying Guest Responsiveness" -ForegroundColor Cyan
@@ -196,7 +206,7 @@ Write-Host "`n[STAGE 2.2 SUCCESS] All guest nodes verified responsive over VMBus
 
 
 # ==============================================================================
-# STAGE 2.3: GUEST IDENTITY & STATIC NETWORK CONFIGURATION
+# STAGE 2.3: GUEST IDENTITY & STATIC NETWORK CONFIGURATION!
 # ==============================================================================
 Write-Host "`n========================================================" -ForegroundColor Cyan
 Write-Host " [STAGE 2.3] VM CONFIGURATION: Applying Network Settings  " -ForegroundColor Cyan
@@ -216,7 +226,7 @@ Write-Host "`n[STAGE 2.3 SUCCESS] All guest node VMs configured with static IPs 
 
 
 # ==============================================================================
-# STAGE 3.1: PROMOTE ROOT DOMAIN CONTROLLER
+# STAGE 3.1: PROMOTING ROOT DOMAIN CONTROLLER!
 # ==============================================================================
 Write-Host "`n========================================================" -ForegroundColor Cyan
 Write-Host " [STAGE 3.1] ACTIVE DIRECTORY: Promoting Forest Root DC  " -ForegroundColor Cyan
@@ -236,7 +246,7 @@ Write-Host "`n[STAGE 3.1 SUCCESS] Forest Root Domain Controller promoted and ver
 
 
 # ==============================================================================
-# STAGE 3.2: DOMAIN JOIN MEMBER SERVERS & CLIENTS
+# STAGE 3.2: DOMAIN JOIN MEMBER SERVERS & CLIENTS!
 # ==============================================================================
 Write-Host "`n========================================================" -ForegroundColor Cyan
 Write-Host " [STAGE 3.2] DOMAIN INTEGRATION: Joining Nodes to Domain " -ForegroundColor Cyan
@@ -253,7 +263,7 @@ if ($LASTEXITCODE -ne 0 -and $null -ne$LASTEXITCODE) {
 }
 
 # ==============================================================================
-# STAGE 3.3: POST-DEPLOYMENT CONFIGURATIONS (DHCP, OUs, USERS)
+# STAGE 3.3: POST-DEPLOYMENT CONFIGURATIONS (DHCP, OUs and USERS)!
 # ==============================================================================
 Write-Host "`n========================================================" -ForegroundColor Cyan
 Write-Host " [STAGE 3.3] WORKLOAD CONFIGURATION: Customizing Lab      " -ForegroundColor Cyan
