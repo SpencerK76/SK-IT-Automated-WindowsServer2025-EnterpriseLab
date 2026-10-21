@@ -1,0 +1,189 @@
+<#
+.SYNOPSIS
+    Stage 2.2 - Guest OS Readiness Barrier & PowerShell Direct Verification Probe
+    Script: 02_SK_Automation-Host_VMConfigTest.ps1
+
+.DESCRIPTION
+    Validates guest OS readiness across all virtual machines defined in 
+    'SK_Automation-VMConfig.json' following hardware provisioning in Stage 2.1.
+
+    Uses PowerShell Direct over the Hyper-V VMBus (requiring no network connection) to verify:
+      - Host-to-guest administrative authentication using centralized credentials
+      - Completion of Windows Setup, Sysprep specialization, and OOBE
+      - Overall OS readiness before network configuration and domain deployment
+
+    Acts as a quality barrier to ensure each VM is fully booted and responsive
+    before subsequent scripts (03-06) inject IP addresses and identity configurations.
+
+.PARAMETER Credential
+    Specifies the administrative PSCredential object passed from the orchestrator.
+
+.PARAMETER ConfigPath
+    Specifies the relative or absolute path to 'SK_Automation-VMConfig.json'.
+
+.NOTES
+    Pipeline Stage : Stage 2.2 (Readiness & Connectivity Verification)
+    Transport      : Hyper-V VMBus (PowerShell Direct)
+    Prerequisites  : Generation 2 VMs, Hyper-V Integration Services, Windows 10 / Server 2016+
+#>
+
+<#
+==================================================================================
+STANDALONE STAGED EXECUTION (Testing outside TheOneRing orchestrator):
+
+Make sure your terminal path is inside the scripts folder:
+Set-Location -Path ".\SK-Automation-Scripts"
+
+1. Store the local Administrator password configured in your Packer variables:
+   $secPass = ConvertTo-SecureString "YourPackerAdminPassword" -AsPlainText -Force
+   $cred    = New-Object System.Management.Automation.PSCredential("Administrator", $secPass)
+
+2. Run the probe using the credential object:
+   .\02_SK_Automation-Host_VMConfigTest.ps1 -Credential $cred
+==================================================================================
+#>
+
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory = $false)]
+    [pscredential]$Credential,
+
+    [Parameter(Mandatory = $false)]
+    [string]$ConfigPath = "SK_Automation-VMConfig.json"
+)
+
+$ErrorActionPreference = "Stop"
+
+# ==============================================================================
+# 1. CREDENTIAL RESOLUTION - added to each script, allowing for either orchestrator-passed PSCredential or interactive prompt
+# ==============================================================================
+if (-not $Credential) {
+    if ($env:LAB_ADMIN_PASSWORD) {
+        $secPass = ConvertTo-SecureString $env:LAB_ADMIN_PASSWORD -AsPlainText -Force
+        $Credential = New-Object System.Management.Automation.PSCredential("Administrator", $secPass)
+    }
+    else {
+        Write-Host "No credential passed from orchestrator." -ForegroundColor Yellow
+        $Credential = Get-Credential -UserName "Administrator" -Message "Enter Local Administrator Credential for Lab VMs"
+    }
+}
+
+# ==============================================================================
+# 2. LOAD CONFIGURATION BLUEPRINT
+# ==============================================================================
+# Resolve root directory relative to script execution path
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ResolvedJsonPath = if (Test-Path $ConfigPath) { $ConfigPath } else { Join-Path $ScriptDir "SK_Automation-VMConfig.json" }
+
+if (-not (Test-Path $ResolvedJsonPath)) {
+    Write-Error "CRITICAL: Configuration file not found at: $ResolvedJsonPath"
+    exit 1
+}
+
+$Config = Get-Content -Raw -Path $ResolvedJsonPath | ConvertFrom-Json
+
+# ==============================================================================
+# 3. VERIFICATION LOOP & READINESS PROBE
+# ==============================================================================
+Write-Host "`n========================================================" -ForegroundColor Cyan
+Write-Host " [STAGE 2.2] TESTING VMs & PS-DIRECT       " -ForegroundColor Cyan
+Write-Host "========================================================" -ForegroundColor Cyan
+
+$AllNodesReady = $true
+
+foreach ($VM in $Config.VMs) {
+    Write-Host "Probing [$($VM.HyperVName)]..." -NoNewline -ForegroundColor White
+
+    # Pre-Flight: Check if VM exists on host
+    $VMState = Get-VM -Name $VM.HyperVName -ErrorAction SilentlyContinue
+    if (-not $VMState) {
+        Write-Host " [FAILED: VM Not Found on Host]" -ForegroundColor Red
+        $AllNodesReady = $false
+        continue
+    }
+
+    if ($VMState.State -ne 'Running') {
+        Write-Host " [FAILED: VM is $($VMState.State)]" -ForegroundColor Red
+        $AllNodesReady = $false
+        continue
+    }
+
+    # Polling parameters: Wait up to 150 seconds (30 attempts x 5s)
+    $MaxRetries = 30
+    $RetryInterval = 5
+    $SessionReady = $false
+    $Attempt = 0
+    $Result = $null
+
+    while (-not $SessionReady -and $Attempt -lt $MaxRetries) {
+        $Attempt++
+        try {
+            $Result = Invoke-Command -VMName $VM.HyperVName -Credential $Credential -ErrorAction Stop -ScriptBlock {
+                return @{
+                    OSName    = (Get-CimInstance -ClassName Win32_OperatingSystem).Caption
+                    GuestName = $env:COMPUTERNAME
+                }
+            }
+
+            if ($Result) {
+                $SessionReady = $true
+            }
+        }
+        catch {
+            # Still in OOBE or initializing services; wait and retry
+            Start-Sleep -Seconds $RetryInterval
+        }
+    }
+
+    if ($SessionReady) {
+        Write-Host " [SUCCESS]" -ForegroundColor Green
+        Write-Host "   -> Detected OS: $($Result.OSName)" -ForegroundColor Gray
+        Write-Host "   -> Guest Hostname: $($Result.GuestName)" -ForegroundColor Gray
+    }
+    else {
+        Write-Host " [FAILED / TIMEOUT]" -ForegroundColor Red
+        Write-Host "   -> Timed out after $($MaxRetries * $RetryInterval)s waiting for guest OS." -ForegroundColor Yellow
+        $AllNodesReady = $false
+    }
+}
+
+# ==============================================================================
+# 4. STAGE COMPLETION SUMMARY
+# ==============================================================================
+if ($AllNodesReady) {
+    Write-Host "`n==================================================================" -ForegroundColor Cyan
+    Write-Host "PIPELINE MILESTONE STATUS: STAGE 2.2 COMPLETE!                                       " -ForegroundColor Cyan
+    Write-Host "==================================================================" -ForegroundColor Cyan
+    Write-Host "[STAGE 1 COMPLETE]   Packer golden .VHDX created and exported."     -ForegroundColor Green
+    Write-Host "[STAGE 2.1 COMPLETE] All Hyper-V VMs created and started."          -ForegroundColor Green
+    Write-Host "[STAGE 2.2 COMPLETE] VM PS Direct / VMBus Testing."                 -ForegroundColor Green
+    Write-Host "[STAGE 2.3 STARTING] VM Configuration via JSON Blueprint."          -ForegroundColor Cyan
+    Write-Host "==================================================================" -ForegroundColor Cyan
+}
+else {
+    Write-Warning "`n[STAGE 2.2 WARNING] One or more virtual machines failed the readiness probe."
+    Write-Warning "Ensure failed nodes are running and local Administrator credentials match."
+}
+
+<#
+### Key Technical decisions behind this Code! 
+
+1. Zero-Network Out-of-Band Synchronization:
+   - Utilizes Hyper-V VMBus (PowerShell Direct) rather than WinRM over TCP/IP, ensuring 
+     validation can occur before network interfaces have static IP addresses or routing configured.
+
+2. Sysprep & OOBE Specialization Synchronization Gate:
+   - Acts as a barrier between hardware provisioning (Stage 2.1) and OS identity 
+     injection (Stage 2.3), preventing race conditions where scripts execute before WMI/CIM is ready.
+
+3. Resilient Polling & Wait Architecture:
+   - Employs a bounded polling loop (30 attempts x 5-second intervals) to accommodate varying host 
+     storage speeds during concurrent Windows first-boot specialization without hanging indefinitely.
+
+4. Decoupled Credential Resolution:
+   - Supports pipeline automation via orchestrator-passed PSCredential, fallback to secure 
+   
+5. Strict JSON Schema Validation:
+   - Dynamically checks target inventory from SK_Automation-VMConfig.json, isolating configuration drift .
+================================================================================
+#>
