@@ -211,5 +211,8 @@ How about some background ambience while working through this automation project
 **Author's Note:** AI assistants were utilised during the development of this project to accelerate troubleshooting, refine PowerShell automation and produce documentation.
 <br>
 
+> [!Note]
+> **Environment & Testing:** This automation pipeline was developed and verified in my personal Hyper-V lab environment. While it works reliably in this specific configuration, results may vary depending on local host hardware and virtualization setups. Feedback and issue reports are always welcome!
+
 #### Please now have a quick read through the [Technical Reference Guide](docs/Technical-Reference.md).
 
