@@ -55,7 +55,7 @@ source "hyperv-iso" "win2025" {
   cd_content = {
     "Autounattend.xml"          = templatefile("${path.root}/templates/Autounattend.pkrtpl.hcl", {
       admin_username = var.admin_username #  Placeholder variables: Go to packer.auto.pkrvars.hcl and add your Windows Administrator Credentials
-      admin_password = var.admin_password #  You only have to enter your creds once. These are your admin cred you will use to login to local/domain.
+      admin_password = var.admin_password #  You only have to enter your credentials once. 
     })
     "bootstrap-winrm-https.ps1" = file("${path.root}/scripts/bootstrap-winrm-https.ps1") # the bootstrap files are run after Windows Starts, before Sysprep!
   }
@@ -63,7 +63,8 @@ source "hyperv-iso" "win2025" {
 
   # --- Boot Keystroke Sequence ---  This is the very first step of the automation. process!
   # When UEFI starts, it shows "Press any key to boot from CD or DVD".
-  # Packer waits 1 second, then presses the spacebar twice so the installer launches. #Has to be kept at 1s, or Windows Setup will not load.
+  # Packer waits 1 second, then presses the spacebar twice so the installer launches. 
+  # Has to be kept at 1s, or Windows Setup will not load correctly
   boot_wait             = "1s"
   boot_command          = [
     "<spacebar><spacebar>"
@@ -146,7 +147,7 @@ source "hyperv-iso" "win11" {
 
   # --- Boot Keystroke Sequence & Setup Bypass ---
   # The Windows 11 installer requires a tailored sequence compared to Server 2025:
-  # When WinPE starts, it often ignores automatic answer file invocation and halts at the UI.
+  # When WinPE starts, it often ignores automatic answer file, from what I have witnessed and halts at the UI.
   # We clear the initial UEFI prompt, wait for WinPE to load, open Command Prompt (Shift+F10),
   # terminate the stalled setup.exe process, and force-restart it using a dynamic drive-letter
   # scan (C through H) to locate the answer file regardless of which drive letter Hyper-V assigns.
@@ -216,7 +217,8 @@ build {
   ]
 
   /* ----------------------------------------------------------------------------------
-  # EXAMPLE: Custom Application Installation (PowerShell 7), This was an application I pre-installed, but being honest. It didn't install correctly, but left this code in for an example!
+  # EXAMPLE: Custom Application Installation (PowerShell 7) - this has not been implemented in the working build, thus has not been tested.
+  # Reason being I wanted to keep the golden images as clean as possible.
   # ----------------------------------------------------------------------------------
   # To bake PowerShell 7 into either or both golden images, uncomment this block.
   # It downloads the official x64 MSI directly from GitHub and executes a silent,
@@ -254,8 +256,8 @@ build {
 
   provisioner "powershell" {
     only   = ["hyperv-iso.win11"]
-    script = "${path.root}/scripts/cleanup-win11.ps1"  #This differs from the cleanup script used by Server2025, to Sysprep Win11, I had to decrypt Win11 first 
-  } # because, by default, the lastest version of Win11 enables bit locker by default if all hardware req are met.
+    script = "${path.root}/scripts/cleanup-win11.ps1"  #This differs from the cleanup script used by Server 2025, to Sysprep Win11, I had to decrypt Win11 first 
+  } # because, by default, the latest version of Win11 enables Bit Locker by default if all hardware requirements are met.
 
   # Provisioner A3: Stage Answer File for Server 2025 Clones
   # Injects admin credentials into unattend.xml and drops it in C:/Windows/Panther/
