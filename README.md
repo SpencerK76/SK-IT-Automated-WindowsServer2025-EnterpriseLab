@@ -8,9 +8,10 @@
 **Quick Links:** | [Technical Reference](docs/Technical-Reference.md) | [Project Deployment Guide](docs/Project-prerequisites-deployment.md) | [Project Customisation](docs/Customise-your-Infrastructure.md) | [pfSense Configuration](/docs/PfSense-configuration.md) |
 
 ---
+Welcome to the my Windows Server 2025 automation project.  I hope you find this project helpful.
 
 ## Description, Goal and the Future
-- **Project Description:** This project provisions, automates, and creates a fully isolated Windows Server 2025 domain environment, including clients, member servers, Domain Controllers (with preconfigured server roles: RootDC, AD DS, DNS, and DHCP), along with users and organisational units (OUs). The build pipeline uses Visual Studio Code, Hyper-V, pfSense (for network isolation), and PowerShell Direct. It provides a repeatable sandbox for lab testing, certification preparation, and practical hands-on administration.
+- **Project Description:** This project provisions, automates, and creates a fully isolated Windows Server 2025 domain environment, including clients, member servers and Domain Controllers. It provisions and builds preconfigured server roles: RootDC, Replica DC and Windows 11 clients. It installs roles, such AD DS, DNS, and DHCP, along with users and organisational units (OUs). The build pipeline uses HashCorps Packer, Visual Studio Code, Hyper-V, pfSense (for network isolation), and PowerShell Direct. It provides a repeatable sandbox for lab testing, certification preparation, and practical hands-on administration.
 
 - **The Goal:** Build a script-based, repeatable, isolated, end-to-end automation pipeline that deploys a Windows Server environment with minimal manual intervention (e.g., executing one line of code and that's it!). The configuration allows users to create multiple forests and domains, customize VM nodes (add and domain join), assign roles (Root DC, Replica DC, Member Server, and Client), and specify Hyper-V VM hardware specifications (vCPUs, dynamic memory, and disk provisioning).
 
