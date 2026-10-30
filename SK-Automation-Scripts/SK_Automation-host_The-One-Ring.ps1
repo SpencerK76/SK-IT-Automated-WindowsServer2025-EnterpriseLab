@@ -50,7 +50,7 @@ param(
     #
     #
     # ------------------------------------------------------------------------------
-    [switch]$SkipPackerBuild = $true  # Set to $true to skip Stage 1 (Packer build) and use existing golden images or to carry over existing configurations.
+    [switch]$SkipPackerBuild = $false  # Set to $true to skip Stage 1 (Packer build) and use existing golden images or to carry over existing configurations.
 )
 
 # Stop execution immediately if any command encounters an unhandled terminating error.
